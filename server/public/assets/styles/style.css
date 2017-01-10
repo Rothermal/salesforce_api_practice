@@ -1,4 +1,94 @@
-.title {
-  color: green; }
+body {
+  background: #00ECFF; }
+
+.top {
+  /*4377b1*/
+  background: #337277; }
+
+.banner {
+  background-image: url("../images/fruitstand.jpg");
+  background-repeat: no-repeat;
+  border: solid;
+  height: 275px; }
+
+h1 {
+  background: #B24900;
+  margin: 10px 0 -15px 0;
+  padding: 25px;
+  border-radius: 5px;
+  border: 2px solid black; }
+
+.left {
+  margin-left: 5px;
+  height: 50px;
+  float: left; }
+
+.right {
+  margin-right: 5px;
+  height: 50px;
+  float: right; }
+
+p {
+  font-weight: bold;
+  font-size: inherit;
+  color: #4377b1;
+  background: aliceblue; }
+
+button p {
+  position: relative;
+  top: 45px; }
+
+.inner {
+  margin: 0 2.5%;
+  padding: 0 2.5%; }
+
+.apple-container {
+  background-color: red; }
+
+.orange-container {
+  background-color: orange; }
+
+.banana-container {
+  background-color: yellow; }
+
+.pear-container {
+  background-color: greenyellow; }
+
+.apple-buy, .pear-buy, .banana-buy, .orange-buy {
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+  height: 150px;
+  width: 150px;
+  font-weight: bold;
+  color: aliceblue; }
+
+.apple-buy {
+  background-image: url("../images/apple.png"); }
+
+.banana-buy {
+  background-image: url("../images/bananas.png"); }
+
+.orange-buy {
+  background-image: url("../images/orange.png"); }
+
+.pear-buy {
+  background-image: url("../images/pear.png"); }
+
+.start-btn {
+  background: #B24900;
+  border: solid; }
+
+.apple-sell, .pear-sell, .banana-sell, .orange-sell {
+  margin: 10px 10px; }
+
+.right-prime {
+  float: right;
+  margin: 10px 0;
+  height: 75px; }
+
+.left-prime {
+  float: left;
+  margin: 10px 0;
+  height: 75px; }
 
 /*# sourceMappingURL=style.css.map */
