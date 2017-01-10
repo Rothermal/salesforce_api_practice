@@ -34,26 +34,6 @@ module.exports = function(grunt) {
             }
         },
         copy: {
-            //angular: {
-            //    expand: true,
-            //    cwd: 'node_modules',
-            //    src: [
-            //        "angular/*.js",
-            //        "angular/*.map",
-            //        "angular-animate/*.js",
-            //        "angular-animate/*.map",
-            //        "angular-aria/*.js",
-            //        "angular-material/*.js",
-            //        "angular-messages/*.js",
-            //        "angular-route/*.js",
-            //        "angular-route/*.map",
-            //        "angular-ui-bootstrap/dist/*.js",
-            //        "angular-ui-bootstrap/dist/*.css",
-            //        "angular-smart-table/dist/*.js",
-            //        "angular-smart-table/dist/*.map"
-            //    ],
-            //    "dest": "server/public/assets/vendors/"
-          //  },
             Jquery:{
                 expand: true,
                 cwd: 'node_modules',
@@ -63,14 +43,6 @@ module.exports = function(grunt) {
                 ],
                 "dest": "server/public/assets/vendors"
             },
-            //Three:{
-            //    expand: true,
-            //    cwd: 'node_modules',
-            //    src:[
-            //        "three/build/three.min.js"
-            //    ],
-            //    "dest": "server/public/assets/vendors"
-            //},
             html: {
                 expand: true,
                 cwd: 'client/views/',
@@ -99,7 +71,6 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-contrib-jshint');
     grunt.loadNpmTasks('grunt-contrib-sass');
-    //grunt.loadNpmTasks('grunt-contrib-cssmin');
 
     grunt.registerTask('default', ['copy', 'jshint', 'uglify','sass']);
 };
