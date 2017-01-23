@@ -14,10 +14,21 @@ $(document).ready(function(){
 
 var init = function(){
     console.log('jquery initalized');
+ //   connecttoSF();
 
 };
 
 var enable = function(){
   console.log('event listeners enabled');
 
+};
+var connecttoSF = function(){
+    console.log('attempt to connect to salesforce');
+    $.ajax({
+        type:'GET',
+        url:'/salesforce/apple',
+        success: function(response){
+            console.log(response);
+        }
+    });
 };
