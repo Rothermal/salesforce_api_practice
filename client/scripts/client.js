@@ -5,7 +5,8 @@
 var STARTING_CASH = 10000;
 var TOTAL_CASH = 0;
 var GAME_TIME = 365;
-var fruits = ['Apple','Pear','Grape','Banana','Orange'];
+var GAMEFRUITS = ['Apple','Pear','Grape','Banana','Orange'];
+var fruits = [];
 var counter = 0;
 var timer;
 $(document).ready(function(){
@@ -13,9 +14,11 @@ $(document).ready(function(){
     enable();
 });
 
+
 var init = function(){
     console.log('jquery initalized');
  //   connecttoSF();
+    createFruit();
 
 };
 
@@ -34,23 +37,28 @@ var enable = function(){
     $('.pear-sell').on('click', sell);
 
 };
-var connecttoSF = function(){
+var connecttoSF = function() {
     console.log('attempt to connect to salesforce');
     $.ajax({
-        type:'GET',
-        url:'/salesforce/apple',
-        success: function(response){
+        type: 'GET',
+        url: '/salesforce/apple',
+        success: function (response) {
             console.log(response);
         }
     });
-
-    function Fruit (name, price, averagePrice, inventory, className){
+};
+var createFruit = function () {
+    for (i = 0; i < fruits.length; i++) {
+        fruits.push(new Fruit(GAMEFRUITS[i] + 's', randomInitialPrice(), [], 0, GAMEFRUITS[i].toLowerCase()));
+    }
+};
+ function Fruit  (name, price, averagePrice, inventory, className){
         this.name=name;
         this.price=price;
         this.averagePrice=averagePrice;
         this.inventory=inventory;
         this.className=className;
-        fruits.push(this);
+      //  fruits.push(this);
     }
 
     function randomInitialPrice () {
@@ -58,9 +66,7 @@ var connecttoSF = function(){
 
     }
 
-    for(i=0;i<fruits.length;i++){
-        fruits[i] = new Fruit(fruits[i] + 's',randomInitialPrice(), [],0,fruits[i].toLowerCase());
-    }
+
 //    var apple = new Fruit("Apples", randomInitialPrice(), [], 0, "apple");
 //    var banana = new Fruit("Bananas", randomInitialPrice(), [], 0, "banana");
 //    var orange = new Fruit("Oranges", randomInitialPrice(), [], 0, "orange");
@@ -70,12 +76,12 @@ var connecttoSF = function(){
 
 
 
-    function beginGame() {
+  var beginGame = function() {
         timer = setInterval(priceUpdate, 15000);
         console.log("begin");
         priceUpdate();
 
-    }
+    };
 
 
 
@@ -167,4 +173,4 @@ var connecttoSF = function(){
     }
 
 
-};
+
