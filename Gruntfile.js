@@ -18,6 +18,10 @@ module.exports = function(grunt) {
         },
         uglify: {
             build: {
+                options: {
+                    sourceMap: true,
+                    sourceMapName: 'server/public/assets/scripts/client.map'
+                },
                 src: [
                     'client/scripts/client.js',
                     'client/scripts/controllers/*.js',
