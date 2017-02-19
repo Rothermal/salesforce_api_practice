@@ -2,187 +2,125 @@
  * Created by Mark on 1/8/17.
  */
 // game constants
-var STARTING_CASH = 10000;
-var TOTAL_CASH = 0;
-var GAME_TIME = 365;
-var GAMEFRUITS = ['Apple','Pear','Banana','Orange'];
-var fruits = [];
-var counter = 0;
-var timer;
-var cash;
+//var STARTING_CASH = 10000;
+//var TOTAL_CASH = 0;
+//var GAME_TIME = 365;
+//var GAMEFRUITS = ['Apple','Pear','Banana','Orange'];
+//var fruits = [];
+//var counter = 0;
+//var timer;
+//var cash;
+var fruitArray = ["Apples", "Oranges", "Bananas", "Pears"];
+var startingPrice = 5.00 ; //Whole numbers = dollarz
+var minSwing = 1; // Whole numbers = cents
+var maxSwing = 50; // Whole numbers = cents
+var minPrice = 0.50;
+var maxPrice = 9.99;
+var gameIntervalTime = 1000; //In milliseconds
+
+var startingCash = 100;
+
+var user;
+
 $(document).ready(function(){
     init();
     enable();
 });
 
-
 var init = function(){
-    console.log('jquery initalized');
- //   connecttoSF();
-    createFruit();
-    cash = STARTING_CASH;
+  console.log('jquery initalized');
+//   connecttoSF();
 
+    user = new User();
+buildFruits(fruitArray);
+buildDomFruits(fruitArray); // end
 };
 
-var enable = function(){
-  console.log('event listeners enabled');
-    $('.start').on('click', beginGame);
-
-    $('.apple-buy').on('click', buy);
-    $('.orange-buy').on('click', buy);
-    $('.banana-buy').on('click', buy);
-    $('.pear-buy').on('click', buy);
-
-    $('.apple-sell').on('click', sell);
-    $('.orange-sell').on('click', sell);
-    $('.banana-sell').on('click', sell);
-    $('.pear-sell').on('click', sell);
-
-};
-var connecttoSF = function() {
-    console.log('attempt to connect to salesforce');
-    $.ajax({
-        type: 'GET',
-        url: '/salesforce/apple',
-        success: function (response) {
-            console.log(response);
+function Fruit(name, price){
+    this.name = name;
+    this.price = price;
+    this.changePrice = function(){
+        var priceSwing = randomNumber(minSwing, maxSwing);
+        var randomAdjustment = randomNumber(1,2);
+        if(randomAdjustment == 1){
+            priceSwing = -priceSwing;
         }
-    });
-};
-var createFruit = function () {
-    var tempFruit = {};
-    for (i = 0; i < GAMEFRUITS.length; i++) {
-        tempFruit = {};
-        tempFruit.name = GAMEFRUITS[i] + 's';
-        tempFruit.price= randomInitialPrice();
-        tempFruit.averagePrice= [];
-        tempFruit.inventory= 0;
-        tempFruit.className= GAMEFRUITS[i].toLowerCase();
-        fruits.push(tempFruit);
-    }
-    console.log('post create fruits', fruits);
-
-};
- function Fruit  (name, price, averagePrice, inventory, className){
-        this.name=name;
-        this.price=price;
-        this.averagePrice=averagePrice;
-        this.inventory=inventory;
-        this.className=className;
-      //  fruits.push(this);
-     console.log(this);
-    }
-
-    function randomInitialPrice () {
-        return randomNumber(50, 999);
-
-    }
-
-
-//    var apple = new Fruit("Apples", randomInitialPrice(), [], 0, "apple");
-//    var banana = new Fruit("Bananas", randomInitialPrice(), [], 0, "banana");
-//    var orange = new Fruit("Oranges", randomInitialPrice(), [], 0, "orange");
-//    var grape = new Fruit("Grapes", randomInitialPrice(), [], 0, "grape");
-//    var pear = new Fruit("Pears", randomInitialPrice(), [], 0, "pear");
-//    var watermelon = new Fruit("Watermelons", randomInitialPrice(), [], 0, "watermelon");
-
-
-
-  var beginGame = function() {
-        timer = setInterval(priceUpdate, 15000);
-        console.log("begin");
-        priceUpdate();
-
+        priceSwing = priceSwing/100;
+        this.price += priceSwing;
     };
+}
+
+function User(){
+    this.startingCash = startingCash;
+    this.totalCash = startingCash;
+}
 
 
 
-    function randomNumber(min, max){
-        return Math.floor(Math.random() * (1 + max - min) + min);
+function enable(){
+    $("#fruitContainer").on("click", ".fruit-button", clickFruit);
+
+    setInterval(gameInterval, gameIntervalTime);
+}
+
+function disable(){
+    clearInterval(gameInterval);
+}
+
+function clickFruit(){
+    var fruit = $(this).data("fruit");
+    var price = $(this).data("price");
+
+    if(user.totalCash >= price){
+        user["inv" + fruit].push(price);
+        user.totalCash -= price;
+        console.log(user);
     }
 
-    function buy(){
-        console.log(this);
-        var myClass = $(this).data('classname');
-        console.log(myClass);
-        for( i=0; i<fruits.length; i++){
-            if(myClass==fruits[i].className && cash>=fruits[i].price){
+}
 
-                cash-=fruits[i].price;
-                fruits[i].inventory++;
-                $('.'+fruits[i].className+'-inventory').html(fruits[i].inventory);
-                $('.bank').html(cash/100);
-
-                fruits[i].averagePrice.push(fruits[i].price);
-                $('.'+fruits[i].className+'-expense').html('$'+Math.round(calcAverage(fruits[i].averagePrice) )/100);
-
-            }
-        }
+function gameInterval(){
+    for(var i = 0; i < fruitArray.length; i++){
+        fruitArray[i].changePrice();
     }
+    updateFruitDom();
+}
 
-    function calcAverage(array){
-        var sum=0;
-        for(var j=0; j<array.length; j++){
-            sum+=parseInt(array[j]);
+function buildFruits(array){
+    for(var i = 0; i < array.length; i++){
+        var newFruit = new Fruit(array[i], startingPrice);
+        array[i] = newFruit;
+        newFruit.changePrice();
 
-        }
-        return sum/array.length;
+        user["inv" + newFruit.name] = [];
     }
+    console.log(user);
+}
 
-    function sell() {
-        console.log(this);
-        var myClass = $(this).data('classname');
-        console.log(myClass);
-        for( i=0; i<fruits.length; i++){
-            if(myClass==fruits[i].className && fruits[i].inventory > 0){
+function buildDomFruits(array){
+    $("#fruitContainer").empty();
+    for(var i = 0; i < array.length; i++){
+        $("#fruitContainer").append("<div class='fruit-button container col-sm-3 "+array[i].name.toLowerCase()+"-buy''></div>");
+        var $el = $("#fruitContainer").children().last();
+        $el.data("fruit", array[i].name);
+        $el.data("price", array[i].price);
+        $el.append("<p>" + array[i].name + "</p>");
+        $el.append("<p class='fruit-price'>" + array[i].price + "</p>");
 
-                cash+=fruits[i].price;
-                fruits[i].inventory--;
-                $('.'+fruits[i].className+'-inventory').html(fruits[i].inventory);
-                $('.bank').html(cash/100);
-            }
-        }
-
+        array[i].element = $el;
     }
+}
 
-    function priceUpdate() {
-        counter++;
-
-
-        if (counter == 10) { //change coutner latter
-
-            for(i=0; i<fruits.length;i++){
-                if(fruits[i].inventory>0){
-                    var fireSale=0;
-                    fireSale=fruits[i].inventory*fruits[i].price;
-                    fruits[i].inventory=0;
-                    $('.'+fruits[i].className+'-inventory').html(fruits[i].inventory);
-                    cash+=fireSale;
-
-
-                }
-            }
-            $('.bank').html(cash/100);
-            alert("Your you earned: $"+(cash-10000)/100);
-            clearInterval(timer);
-        }
-
-
-        for(var i=0;i<fruits.length; i++){
-            var priceUpdate=0;
-             priceUpdate = randomNumber(-50, 50);
-            // priceUpdate = priceUpdate;
-            fruits[i].price = fruits[i].price + priceUpdate;
-            if(fruits[i].price >= 1000){
-                fruits[i].price -= 49;
-            }
-            else if (fruits[i].price < 50) {
-                fruits[i].price += 49;
-            }
-            $('.'+fruits[i].className+'-price').text(fruits[i].price / 100);
-        }
-
+function updateFruitDom(){
+    for(var i = 0; i < fruitArray.length; i++){
+        var fruit = fruitArray[i];
+        fruit.price = fruit.price.toFixed(2);
+        fruit.element.find(".fruit-price").text(fruit.price);
+        fruit.element.data("price", fruit.price);
     }
+}
 
-
+function randomNumber(min, max){
+    return Math.floor(Math.random() * (1 + max - min) + min);
+}
 

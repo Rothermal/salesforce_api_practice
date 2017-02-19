@@ -42,37 +42,31 @@ button p {
   margin: 0 2.5%;
   padding: 0 2.5%; }
 
-.apple-container {
-  background-color: red; }
-
-.orange-container {
-  background-color: orange; }
-
-.banana-container {
-  background-color: yellow; }
-
-.pear-container {
-  background-color: greenyellow; }
-
-.apple-buy, .pear-buy, .banana-buy, .orange-buy {
+.apples-buy, .pears-buy, .bananas-buy, .oranges-buy {
   background-repeat: no-repeat;
   background-size: 100% 100%;
-  height: 150px;
-  width: 150px;
+  height: 250px;
+  width: 250px;
   font-weight: bold;
-  color: aliceblue; }
+  color: aliceblue;
+  margin: 5px 5px;
+  padding: 5px 5px; }
 
-.apple-buy {
-  background-image: url("../images/apple.png"); }
+.apples-buy {
+  background-image: url("../images/apple.png");
+  background-color: red; }
 
-.banana-buy {
-  background-image: url("../images/bananas.png"); }
+.bananas-buy {
+  background-image: url("../images/bananas.png");
+  background-color: yellow; }
 
-.orange-buy {
-  background-image: url("../images/orange.png"); }
+.oranges-buy {
+  background-image: url("../images/orange.png");
+  background-color: orange; }
 
-.pear-buy {
-  background-image: url("../images/pear.png"); }
+.pears-buy {
+  background-image: url("../images/pear.png");
+  background-color: greenyellow; }
 
 .start-btn {
   background: #B24900;
