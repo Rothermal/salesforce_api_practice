@@ -5,10 +5,11 @@
 var STARTING_CASH = 10000;
 var TOTAL_CASH = 0;
 var GAME_TIME = 365;
-var GAMEFRUITS = ['Apple','Pear','Grape','Banana','Orange'];
+var GAMEFRUITS = ['Apple','Pear','Banana','Orange'];
 var fruits = [];
 var counter = 0;
 var timer;
+var cash;
 $(document).ready(function(){
     init();
     enable();
@@ -19,6 +20,7 @@ var init = function(){
     console.log('jquery initalized');
  //   connecttoSF();
     createFruit();
+    cash = STARTING_CASH;
 
 };
 
@@ -48,9 +50,18 @@ var connecttoSF = function() {
     });
 };
 var createFruit = function () {
-    for (i = 0; i < fruits.length; i++) {
-        fruits.push(new Fruit(GAMEFRUITS[i] + 's', randomInitialPrice(), [], 0, GAMEFRUITS[i].toLowerCase()));
+    var tempFruit = {};
+    for (i = 0; i < GAMEFRUITS.length; i++) {
+        tempFruit = {};
+        tempFruit.name = GAMEFRUITS[i] + 's';
+        tempFruit.price= randomInitialPrice();
+        tempFruit.averagePrice= [];
+        tempFruit.inventory= 0;
+        tempFruit.className= GAMEFRUITS[i].toLowerCase();
+        fruits.push(tempFruit);
     }
+    console.log('post create fruits', fruits);
+
 };
  function Fruit  (name, price, averagePrice, inventory, className){
         this.name=name;
@@ -59,6 +70,7 @@ var createFruit = function () {
         this.inventory=inventory;
         this.className=className;
       //  fruits.push(this);
+     console.log(this);
     }
 
     function randomInitialPrice () {
