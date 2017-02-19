@@ -31,9 +31,6 @@ var init = function(){
   console.log('jquery initalized');
    updateGameVariables();
 
-    user = new User();
-buildFruits(fruitArray);
-buildDomFruits(fruitArray); // end
 };
 
 function Fruit(name, price){
@@ -62,6 +59,13 @@ function updateGameVariables(){
               url: '/salesforce/gameSettings',
               success: function (response) {
                   console.log(response);
+                  startingCash = response.starting_cash__c;
+                  fruitArray = response.fruits__c.split(';');
+                  console.log(startingCash);
+                  console.log(fruitArray);
+                  user = new User();
+                  buildFruits(fruitArray);
+                  buildDomFruits(fruitArray);
               }
     });
 }
