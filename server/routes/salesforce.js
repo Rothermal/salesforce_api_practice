@@ -45,9 +45,10 @@ console.log('in variables get route');
         if (err) {
             console.log(err);
         }
-        console.log('respnse from query', response.records[0]._fields);
-    });
-    res.send(response.records[0]._fields);
+        console.log('response from query', response.records[0]._fields);
+            res.send(response.records[0]._fields);
+
+        });
 
 });
 
