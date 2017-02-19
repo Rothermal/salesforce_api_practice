@@ -2,13 +2,17 @@ var express = require("express");
 var app = express();
 var port = process.env.PORT || 3000;
 
-var salesforce = require('./routes/salesforce.js');
-var index = require('./routes/index.js');
+var salesforce = require('./routes/salesforce');
+var index = require('./routes/index');
 
 app.use(express.static('server/public'));
 
+app.use('/salesforce', salesforce);
+
+
+
+
 app.use('/',index);
-app.get('/salesforce', salesforce);
 
 var server = app.listen(port,function(){
    var port = server.address().port;

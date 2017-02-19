@@ -29,7 +29,7 @@ $(document).ready(function(){
 
 var init = function(){
   console.log('jquery initalized');
-//   connecttoSF();
+   updateGameVariables();
 
     user = new User();
 buildFruits(fruitArray);
@@ -55,7 +55,16 @@ function User(){
     this.totalCash = startingCash;
 }
 
-
+function updateGameVariables(){
+    console.log('attempt to connect to salesforce');
+      $.ajax({
+              type: 'GET',
+              url: '/salesforce/gameSettings',
+              success: function (response) {
+                  console.log(response);
+              }
+    });
+}
 
 function enable(){
     $("#fruitContainer").on("click", ".fruit-button", clickFruit);
@@ -114,7 +123,7 @@ function buildDomFruits(array){
 function updateFruitDom(){
     for(var i = 0; i < fruitArray.length; i++){
         var fruit = fruitArray[i];
-        fruit.price = fruit.price.toFixed(2);
+        //fruit.price = fruit.price.toFixed(2);
         fruit.element.find(".fruit-price").text(fruit.price);
         fruit.element.data("price", fruit.price);
     }
