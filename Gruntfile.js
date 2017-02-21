@@ -65,6 +65,12 @@ module.exports = function(grunt) {
                     "dist/**/*"
                 ],
                 "dest": "server/public/assets/vendors/bootstrap/"
+            },
+            accounting:{
+                expand:true,
+                cwd: "node_modules/accounting/",
+                src:["accounting.min.js"],
+                "dest": "server/public/assets/vendors/accounting/"
             }
         }
 
