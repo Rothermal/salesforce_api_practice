@@ -37,7 +37,6 @@ function Fruit(name, price){
     this.name = name;
     this.price = price;
     this.changePrice = function(){
-        parseInt(this.price);
         var priceSwing = randomNumber(minSwing, maxSwing);
         var randomAdjustment = randomNumber(1,2);
         if(randomAdjustment == 1){
@@ -128,9 +127,9 @@ function buildDomFruits(array){
 function updateFruitDom(){
     for(var i = 0; i < fruitArray.length; i++){
         var fruit = fruitArray[i];
-        fruit.price =parseFloat((Math.round(fruit.price * 100) / 100).toFixed(2));
-        fruit.price = accounting.formatMoney(fruit.price);
-        fruit.element.find(".fruit-price").text(fruit.price);
+        fruit.price = parseFloat((Math.round(fruit.price * 100) / 100).toFixed(2));
+        fruit.element.find(".fruit-price").text('$' + fruit.price.toFixed(2));
+
         fruit.element.data("price", fruit.price);
     }
 }
