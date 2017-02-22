@@ -24,7 +24,7 @@ var user;
 
 $(document).ready(function(){
     init();
-    enable();
+ //   enable();
 });
 
 var init = function(){
@@ -44,6 +44,12 @@ function Fruit(name, price){
         }
         priceSwing = priceSwing/100;
         this.price += priceSwing;
+        if(this.price > maxPrice){
+            this.price = maxPrice;
+        }
+        if(this.price < minPrice){
+            this.price = minPrice;
+        }
     };
 }
 
@@ -63,6 +69,7 @@ function updateGameVariables(){
                   fruitArray = response.fruits__c.split(';');
                   console.log(startingCash);
                   console.log(fruitArray);
+                  enable();
                   user = new User();
                   buildFruits(fruitArray);
                   buildDomFruits(fruitArray);
@@ -88,6 +95,7 @@ function clickFruit(){
         user["inv" + fruit].push(price);
         user.totalCash -= price;
         console.log(user);
+        updateBankDom();
     }
 
 }
@@ -119,9 +127,15 @@ function buildDomFruits(array){
         $el.data("price", array[i].price);
         $el.append("<p>" + array[i].name + "</p>");
         $el.append("<p class='fruit-price'>" + array[i].price + "</p>");
-
         array[i].element = $el;
     }
+    updateBankDom();
+}
+
+function updateBankDom(){
+    $('.bank').empty();
+    var bank = $('.bank');
+    bank.text('$' + user.totalCash.toFixed(2));
 }
 
 function updateFruitDom(){
@@ -132,6 +146,7 @@ function updateFruitDom(){
 
         fruit.element.data("price", fruit.price);
     }
+    updateBankDom();
 }
 
 function randomNumber(min, max){

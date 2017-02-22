@@ -15,7 +15,7 @@ body{
 }
 
 h1 {
-  background: #B24900;
+  background: #4377b1;
   margin: 10px 0 -15px 0;
   padding: 25px;
   border-radius:5px;
@@ -34,9 +34,18 @@ h1 {
 }
 p{
   font-weight: bold;
-  font-size: inherit;
-  color: #4377b1;
-  background: aliceblue;
+  font-size: 18px;
+  color: black;
+  background: transparent;
+  text-shadow:1px 1px 0 #fff,
+  -1px -1px 0 #fff,
+  1px -1px 0 #fff,
+  -1px 1px 0 #fff,
+  0px 1px 0 #fff,
+  1px 0px 0 #fff,
+  0px -1px 0 #fff,
+  -1px 0px 0 #fff,
+  4px 4px 3px #000;
 }
 button p {
   position: relative;
@@ -81,7 +90,7 @@ button p {
 
 }
 .start-btn{
-  background: #B24900;
+  background: #4377b1;
   border: solid;
 }
 
