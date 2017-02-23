@@ -31,6 +31,12 @@ org.authenticate({username:sfUser, password:sfPass}, function(err, response){
     }
 });
 
+
+router.post('/buyFruit', function (req,res){
+   console.log('request in buyfruit post route', req);
+});
+
+
 router.get('/gameSettings',function(req, res){
 console.log('in variables get route');
     org.query({query: "" +

@@ -54,7 +54,7 @@ function Fruit(name, price){
 }
 
 function User(){
-    this.startingCash = startingCash;
+ //   this.startingCash = startingCash;
     this.totalCash = startingCash;
 }
 
@@ -78,7 +78,7 @@ function updateGameVariables(){
 }
 
 function enable(){
-    $("#fruitContainer").on("click", ".fruit-button", clickFruit);
+    $("#fruitContainer").on("click", ".fruit-button", buyFruit);
 
     setInterval(gameInterval, gameIntervalTime);
 }
@@ -87,7 +87,7 @@ function disable(){
     clearInterval(gameInterval);
 }
 
-function clickFruit(){
+function buyFruit(){
     var fruit = $(this).data("fruit");
     var price = $(this).data("price");
 
@@ -95,8 +95,22 @@ function clickFruit(){
         user["inv" + fruit].push(price);
         user.totalCash -= price;
         console.log(user);
+        postFruit(fruit, price);
         updateBankDom();
     }
+}
+
+function postFruit(fruit, price){
+   var fruitObject = {name:fruit,price:price};
+    console.log('fruit, price in post route client side', fruit, price);
+    $.ajax({
+        type:'POST',
+        url:"/salesforce/buyFruit",
+        data: fruitObject,
+        success: function(response){
+            console.log(response);
+        }
+    });
 
 }
 
