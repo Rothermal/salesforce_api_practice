@@ -102,7 +102,7 @@ function buyFruit(){
 
 function postFruit(fruit, price){
    var fruitObject = {name:fruit,price:price};
-    console.log('fruit, price in post route client side', fruit, price);
+    console.log('fruit, price in post route client side', fruitObject);
     $.ajax({
         type:'POST',
         url:"/salesforce/buyFruit",

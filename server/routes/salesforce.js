@@ -33,7 +33,7 @@ org.authenticate({username:sfUser, password:sfPass}, function(err, response){
 
 
 router.post('/buyFruit', function (req,res){
-   console.log('request in buyfruit post route', req);
+   console.log('request in buyfruit post route', req.body);
 });
 
 
