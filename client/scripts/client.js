@@ -2,16 +2,8 @@
  * Created by Mark on 1/8/17.
  */
 // game constants
-//var STARTING_CASH = 10000;
-//var TOTAL_CASH = 0;
-//var GAME_TIME = 365;
-//var GAMEFRUITS = ['Apple','Pear','Banana','Orange'];
-//var fruits = [];
-//var counter = 0;
-//var timer;
-//var cash;
 var fruitArray = ["Apples", "Oranges", "Bananas", "Pears"];
-var startingPrice = 5.00 ; //Whole numbers = dollarz
+var startingPrice = 5.00 ; //Whole numbers = dollars
 var minSwing = 1; // Whole numbers = cents
 var maxSwing = 50; // Whole numbers = cents
 var minPrice = 0.50;
@@ -24,12 +16,12 @@ var user;
 
 $(document).ready(function(){
     init();
- //   enable();
 });
 
 var init = function(){
   console.log('jquery initalized');
-   updateGameVariables();
+// moving update game variables into start game function
+    updateGameVariables();
 
 };
 
@@ -58,11 +50,15 @@ function User(){
     this.totalCash = startingCash;
 }
 
-function updateGameVariables(){
+function updateGameVariables(type){
+    var gameType = type;
+    if (!gameType){
+        gameType = 'Standard';
+    }
     console.log('attempt to connect to salesforce');
       $.ajax({
               type: 'GET',
-              url: '/salesforce/gameSettings',
+              url: '/salesforce/gameSettings/'+gameType,
               success: function (response) {
                   console.log(response);
                   startingCash = response.starting_cash__c;
@@ -80,11 +76,15 @@ function updateGameVariables(){
 function enable(){
     $("#fruitContainer").on("click", ".fruit-button", buyFruit);
 
-    setInterval(gameInterval, gameIntervalTime);
 }
 
 function disable(){
     clearInterval(gameInterval);
+}
+function startGame(type){
+    var gameType = type;
+    setInterval(gameInterval, gameIntervalTime);
+    updateGameVariables(gameType);
 }
 
 function buyFruit(){
@@ -140,7 +140,7 @@ function buildDomFruits(array){
         $el.data("fruit", array[i].name);
         $el.data("price", array[i].price);
         $el.append("<p>" + array[i].name + "</p>");
-        $el.append("<p class='fruit-price'>" + array[i].price + "</p>");
+        $el.append("<p class='fruit-price'>" + array[i].price.toFixed(2) + "</p>");
         array[i].element = $el;
     }
     updateBankDom();

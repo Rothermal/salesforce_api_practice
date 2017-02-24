@@ -37,8 +37,9 @@ router.post('/buyFruit', function (req,res){
 });
 
 
-router.get('/gameSettings',function(req, res){
-console.log('in variables get route');
+router.get('/gameSettings/:type',function(req, res){
+console.log('in variables get route',req.params);
+    var type = req.params.type;
     org.query({query: "" +
     "SELECT id, " +
     "name, " +
@@ -46,7 +47,7 @@ console.log('in variables get route');
     "Game_Length__c, " +
     "Starting_Cash__c  " +
     "FROM Game_Variable__c " +
-    "WHERE name = 'Standard'"},
+    "WHERE name = '"+type+"'"},
         function (err, response) {
         if (err) {
             console.log(err);
