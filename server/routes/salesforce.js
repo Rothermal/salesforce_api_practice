@@ -10,6 +10,7 @@ var sfToken = process.env.SFTOKEN;
 var sfclientId = process.env.SFCLIENTID;
 var sfsecret = process.env.SFSECRET;
 var oauth;
+var gameId;
 
 var org = nforce.createConnection({
     clientId: sfclientId,
@@ -32,10 +33,23 @@ org.authenticate({username:sfUser, password:sfPass}, function(err, response){
 });
 
 
-router.post('/buyFruit', function (req,res){
-   console.log('request in buyfruit post route', req.body);
-});
+router.post('/buyFruit', function (req,res) {
+    console.log('request in buyfruit post route', req.body);
 
+    fruit = nforce.createSObject('Fruit__c');
+    fruit.set('type__c', req.body.name);
+    fruit.set('buy_price__c', req.body.price);
+    fruit.set('Fruit_Stand__c', gameId);
+
+    org.insert({sobject: fruit}, function (err, response) {
+        if (err) {
+            console.log('here is the error: ', err);
+        } else {
+            console.log(response.id);
+            res.send(response.id);
+        }
+    });
+});
 
 router.get('/gameSettings/:type',function(req, res){
 console.log('in variables get route',req.params);
@@ -56,7 +70,19 @@ console.log('in variables get route',req.params);
             res.send(response.records[0]._fields);
 
         });
+});
 
+router.get('/start',function(req, res){
+    var fruitStand = nforce.createSObject('Fruit_Stand__c');
+
+    org.insert({ sobject: fruitStand }, function(err, res){
+        if(err){
+            console.log( 'here is the error: ', err );
+        } else {
+           gameId = res.id;
+            console.log(res.id);
+        }
+    });
 });
 
 console.log('hit salesforce');
