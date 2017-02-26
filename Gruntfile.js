@@ -65,6 +65,14 @@ module.exports = function(grunt) {
                     "dist/**/*"
                 ],
                 "dest": "server/public/assets/vendors/bootstrap/"
+            },
+            Tether:{
+                expand:true,
+                cwd:"node_modules/tether/",
+                src:[
+                    "dist/**/*"
+                ],
+                "dest":"server/public/assets/vendors/tether/"
             }
         }
 

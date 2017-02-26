@@ -36,7 +36,7 @@ org.authenticate({username:sfUser, password:sfPass}, function(err, response){
 router.post('/buyFruit', function (req,res) {
     console.log('request in buyfruit post route', req.body);
 
-    fruit = nforce.createSObject('Fruit__c');
+ var   fruit = nforce.createSObject('Fruit__c');
     fruit.set('type__c', req.body.name);
     fruit.set('buy_price__c', req.body.price);
     fruit.set('Fruit_Stand__c', gameId);
@@ -45,10 +45,28 @@ router.post('/buyFruit', function (req,res) {
         if (err) {
             console.log('here is the error: ', err);
         } else {
-            console.log(response.id);
+            console.log('buyfruit response id in post route',response.id);
             res.send(response.id);
         }
     });
+});
+
+router.put('/sellFruit',function(req,res){
+    console.log('req in sellfruit route', req.body);
+
+    var fruit = nforce.createSObject('Fruit__c');
+    fruit.set('id', req.body.id);
+    fruit.set('sell_price__c', req.body.price);
+
+    org.insert({sobject: fruit}, function (err, response) {
+        if (err) {
+            console.log('here is the error: ', err);
+        } else {
+            console.log('sellfruit response in put route',response);
+            res.send(response);
+        }
+    });
+
 });
 
 router.get('/gameSettings/:type',function(req, res){
@@ -66,7 +84,7 @@ console.log('in variables get route',req.params);
         if (err) {
             console.log(err);
         }
-        console.log('response from query', response.records[0]._fields);
+        console.log('response from game settings query', response.records[0]._fields);
             res.send(response.records[0]._fields);
 
         });
@@ -75,12 +93,13 @@ console.log('in variables get route',req.params);
 router.get('/start',function(req, res){
     var fruitStand = nforce.createSObject('Fruit_Stand__c');
 
-    org.insert({ sobject: fruitStand }, function(err, res){
+    org.insert({ sobject: fruitStand }, function(err, response){
         if(err){
             console.log( 'here is the error: ', err );
         } else {
-           gameId = res.id;
-            console.log(res.id);
+           gameId = response.id;
+            console.log('the game id',gameId);
+            res.send(gameId);
         }
     });
 });

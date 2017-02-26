@@ -1,9 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta charset="UTF-8">
     <title>Fruit Market</title>
     <script src="assets/vendors/jquery/dist/jquery.min.js"></script>
+    <script src="assets/vendors/tether/dist/js/tether.min.js"></script>
     <script src="assets/vendors/bootstrap/dist/js/bootstrap.min.js"></script>
     <script src="assets/scripts/client.min.js" ></script>
     <link rel="stylesheet" href="assets/vendors/bootstrap/dist/css/bootstrap.min.css">
@@ -11,18 +13,46 @@
     <link rel="stylesheet" href="assets/styles/style.css">
 </head>
 <body>
+
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Game Options</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div>
+                    Welcome to the Kappa Fruit Market
+                 <br/>
+                    Pick which version of the game you would like to play
+
+                </div>
+                </div>
+            <div class="modal-footer">
+                <button type="button" data-text="Standard" data-dismiss="modal" class="btn btn-primary start">Standard</button>
+                <button type="button" data-text="Tropical" data-dismiss="modal" class="btn btn-primary start">Tropical</button>
+                <button type="button" data-text="Berry" data-dismiss="modal" class="btn btn-primary start">Berry</button>
+                <button type="button" data-text="Slots" data-dismiss="modal"  class="btn btn-primary start">Slots</button>
+            </div>
+        </div>
+    </div>
+</div>
 <div class="top">
     <header class="container text-center">
         <h1>
-            <img class="left" src="assets/images/KappacatBLUE.png">
-            <img class="left" src="assets/images/KappacatBLUE.png">
-            <img class="left" src="assets/images/KappacatBLUE.png">
-            <img class="left" src="assets/images/KappacatBLUE.png">
-            Hammerin' Hank's Fruit Market!
-            <img class="right" src="assets/images/KappacatBLUE.png">
-            <img class="right" src="assets/images/KappacatBLUE.png">
-            <img class="right" src="assets/images/KappacatBLUE.png">
-            <img class="right" src="assets/images/KappacatBLUE.png">
+            <!--<img class="left" src="assets/images/KappacatBLUE.png">-->
+            <!--<img class="left" src="assets/images/KappacatBLUE.png">-->
+            <!--<img class="left" src="assets/images/KappacatBLUE.png">-->
+            <!--<img class="left" src="assets/images/KappacatBLUE.png">-->
+            Fruit Market
+            <!--<img class="right" src="assets/images/KappacatBLUE.png">-->
+            <!--<img class="right" src="assets/images/KappacatBLUE.png">-->
+            <!--<img class="right" src="assets/images/KappacatBLUE.png">-->
+            <!--<img class="right" src="assets/images/KappacatBLUE.png">-->
         </h1>
     </header>
     <div class="container banner text-center">
@@ -30,19 +60,18 @@
 
     <div class="container dropdown text-center start-btn">
         <img class="left-prime" src="http://dewiskbohv5c1.cloudfront.net/assets/logo-prime-d52497d59d4032af4adcd58814533512.svg">
-        <button class="btn dropdown start btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            Start The Game!
+
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">
+            Game Options
         </button>
-        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-            <a class="dropdown-item" href="#">Standard</a>
-            <a class="dropdown-item" href="#">Tropical</a>
-            <a class="dropdown-item" href="#">BerryLicious</a>
-        </div>
+
+
+
         <img class="right-prime" src="http://dewiskbohv5c1.cloudfront.net/assets/logo-prime-d52497d59d4032af4adcd58814533512.svg">
 
         <h2 class ='bank'></h2>
-
     </div>
+
 
 </div>
 <div id="fruitContainer" class="container text-center"></div>
