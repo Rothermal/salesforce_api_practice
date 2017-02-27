@@ -14,9 +14,11 @@ var startingCash = 100;
 var timer;
 var user;
 
+// todo need to disable buy/sell buttons until response from salesforce returns
+
 
 //////////////////////////
-// Dom Logic
+// build
 //////////////////////////
 $(document).ready(function(){
     init();
@@ -34,7 +36,19 @@ function enable(){
     $('.start').on("click", startGame);
 }
 
+function buildFruits(fruitArray){
+    for(var i = 0; i < fruitArray.length; i++){
+        var newFruit = new Fruit(fruitArray[i], startingPrice);
+        fruitArray[i] = newFruit;
+        newFruit.changePrice();
+        user["inv" + newFruit.name] = [];
+    }
+ //   console.log('user in build fruits',user);
+
+}
+
 function updateBankDom(){
+    console.log('t cash in bank dom',user.totalCash);
     $('.bank').empty();
     var bank = $('.bank');
     bank.text('$' + user.totalCash.toFixed(2));
@@ -43,12 +57,13 @@ function updateBankDom(){
 function buildDomFruits(fruitArray){
     $("#fruitContainer").empty();
     for(var i = 0; i < fruitArray.length; i++){
-        $("#fruitContainer").append("<div class='fruit-button container col-sm-3 "+fruitArray[i].name.toLowerCase()+"-buy''></div>");
+        $("#fruitContainer").append("<div class='container col-sm-3 "+fruitArray[i].name.toLowerCase()+"-buy''></div>");
         var $el = $("#fruitContainer").children().last();
         $el.data("fruit", fruitArray[i].name);
         $el.data("price", fruitArray[i].price);
         $el.append("<p>" + fruitArray[i].name + "</p>");
         $el.append("<p class='fruit-price'>" + fruitArray[i].price.toFixed(2) + "</p>");
+        $el.append("<button class='btn btn-warning fruit-button'>Buy</button>");
         $el.append("<button class='btn btn-warning sell-button'>Sell</button>");
         fruitArray[i].element = $el;
     }
@@ -64,7 +79,7 @@ function updateFruitDom(){
 
         fruit.element.data("price", fruit.price);
     }
-    updateBankDom();
+  //  updateBankDom();
 }
 
 
@@ -114,7 +129,6 @@ function disable(){
 
 function gameInterval(){
     gameRounds--;
-//    console.log(gameRounds);
     if (gameRounds === 0){
         disable();
         console.log('Game Over');
@@ -160,8 +174,8 @@ function getGameId(){
 }
 
 function buyFruit(){
-    var fruit = $(this).data("fruit");
-    var price = $(this).data("price");
+    var fruit = $(this).parent().data("fruit");
+    var price = $(this).parent().data("price");
 
     if(user.totalCash >= price){
     //    user["inv" + fruit].push(price);
@@ -175,29 +189,29 @@ function buyFruit(){
 function sellFruit(){
     var fruit = $(this).parent().data("fruit");
     var price = $(this).parent().data("price");
-    console.log('fruit and price inside sell', fruit, price);
-    console.log( user["inv" + fruit] );
-        var fruitId = user["inv" + fruit].pop();
-
-        user.totalCash += price;
-        console.log(fruitId);
-        updateFruit(fruitId, price);
-        updateBankDom();
-
+  //  console.log('fruit and price inside sell', fruit, price);
+//    console.log( user["inv" + fruit] );
+   if(user["inv" + fruit].length > 0) {
+       var fruitId = user["inv" + fruit].splice(0, 1);
+       user.totalCash += price;
+       console.log(user.totalCash);
+       updateFruit(fruitId, price);
+       updateBankDom();
+   }
 }
 
 function postFruit(fruit, price){
    var fruitObject = {name:fruit,price:price};
-    console.log('fruit, price in post route client side', fruitObject);
+   // console.log('fruit, price in post route client side', fruitObject);
     $.ajax({
         type:'POST',
         url:"/salesforce/buyFruit",
         data: fruitObject,
         success: function(response){
-            console.log('fruit id',response);
-            console.log('fruit type', fruit);
+      //      console.log('fruit id',response);
+      //      console.log('fruit type', fruit);
             user["inv" + fruit].push(response);
-            console.log('in post fruit, on success, user inventory ',user);
+      //      console.log('in post fruit, on success, user inventory ',user);
         }
     });
 
@@ -214,19 +228,6 @@ function updateFruit(fruitId,price){
         }
     });
 }
-
-
-function buildFruits(fruitArray){
-    for(var i = 0; i < fruitArray.length; i++){
-        var newFruit = new Fruit(fruitArray[i], startingPrice);
-        fruitArray[i] = newFruit;
-        newFruit.changePrice();
-        user["inv" + newFruit.name] = [];
-    }
-    console.log('user in build fruits',user);
-
-}
-
 
 //////////////////////
 // random numbers!!!

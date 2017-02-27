@@ -58,7 +58,7 @@ router.put('/sellFruit',function(req,res){
     fruit.set('id', req.body.id);
     fruit.set('sell_price__c', req.body.price);
 
-    org.insert({sobject: fruit}, function (err, response) {
+    org.update({sobject: fruit}, function (err, response) {
         if (err) {
             console.log('here is the error: ', err);
         } else {
