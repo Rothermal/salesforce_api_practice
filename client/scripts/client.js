@@ -125,6 +125,8 @@ function startGame(){
 
 function disable(){
     clearInterval(timer);
+    $(".sell-button").prop("disabled",true);
+    $(".fruit-button").prop("disabled",true);
 }
 
 function gameInterval(){
@@ -145,7 +147,6 @@ function updateGameVariables(type){
     if (!gameType){
         gameType = 'Standard';
     }
-  //  console.log('attempt to connect to salesforce');
       $.ajax({
               type: 'GET',
               url: '/salesforce/gameSettings/'+gameType,
@@ -176,12 +177,11 @@ function getGameId(){
 function buyFruit(){
     var fruit = $(this).parent().data("fruit");
     var price = $(this).parent().data("price");
-
+    var button = $(this);
     if(user.totalCash >= price){
-    //    user["inv" + fruit].push(price);
         user.totalCash -= price;
-    //    console.log(user);
-        postFruit(fruit, price);
+        $(this).prop("disabled",true);
+        postFruit(fruit, price, button);
         updateBankDom();
     }
 }
@@ -189,18 +189,19 @@ function buyFruit(){
 function sellFruit(){
     var fruit = $(this).parent().data("fruit");
     var price = $(this).parent().data("price");
+    var button = $(this);
   //  console.log('fruit and price inside sell', fruit, price);
 //    console.log( user["inv" + fruit] );
    if(user["inv" + fruit].length > 0) {
        var fruitId = user["inv" + fruit].splice(0, 1);
        user.totalCash += price;
-       console.log(user.totalCash);
-       updateFruit(fruitId, price);
+       $(this).prop("disabled",true);
+       updateFruit(fruitId, price, button);
        updateBankDom();
    }
 }
 
-function postFruit(fruit, price){
+function postFruit(fruit, price, button){
    var fruitObject = {name:fruit,price:price};
    // console.log('fruit, price in post route client side', fruitObject);
     $.ajax({
@@ -208,16 +209,14 @@ function postFruit(fruit, price){
         url:"/salesforce/buyFruit",
         data: fruitObject,
         success: function(response){
-      //      console.log('fruit id',response);
-      //      console.log('fruit type', fruit);
             user["inv" + fruit].push(response);
-      //      console.log('in post fruit, on success, user inventory ',user);
+            button.prop("disabled", false);
         }
     });
 
 }
 
-function updateFruit(fruitId,price){
+function updateFruit(fruitId,price, button){
     var fruitObject = {id:fruitId,price:price};
     $.ajax({
         type:'PUT',
@@ -225,6 +224,8 @@ function updateFruit(fruitId,price){
         data:fruitObject,
         success:function(response){
         console.log('sell fruit response',response);
+            button.prop("disabled", false);
+
         }
     });
 }
