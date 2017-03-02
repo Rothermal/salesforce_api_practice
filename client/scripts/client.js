@@ -14,27 +14,13 @@ var startingCash = 100;
 var timer;
 var user;
 
-// todo need to disable buy/sell buttons until response from salesforce returns
-
-
-//////////////////////////
-// build
-//////////////////////////
 $(document).ready(function(){
     init();
 });
 
-var init = function(){
-  console.log('jquery initalized');
-  enable();
-};
-
-
-function enable(){
-    $("#fruitContainer").on("click", ".fruit-button", buyFruit);
-    $("#fruitContainer").on("click", ".sell-button", sellFruit);
-    $('.start').on("click", startGame);
-}
+//////////////////////////
+// build
+//////////////////////////
 
 function buildFruits(fruitArray){
     for(var i = 0; i < fruitArray.length; i++){
@@ -43,16 +29,8 @@ function buildFruits(fruitArray){
         newFruit.changePrice();
         user["inv" + newFruit.name] = [];
     }
- //   console.log('user in build fruits',user);
-
 }
 
-function updateBankDom(){
-    console.log('t cash in bank dom',user.totalCash);
-    $('.bank').empty();
-    var bank = $('.bank');
-    bank.text('$' + user.totalCash.toFixed(2));
-}
 
 function buildDomFruits(fruitArray){
     $("#fruitContainer").empty();
@@ -69,7 +47,16 @@ function buildDomFruits(fruitArray){
     }
     updateBankDom();
 }
+//////////////////////
+// update
+/////////////////////
 
+function updateBankDom(){
+    console.log('t cash in bank dom',user.totalCash);
+    $('.bank').empty();
+    var bank = $('.bank');
+    bank.text('$' + user.totalCash.toFixed(2));
+}
 
 function updateFruitDom(){
     for(var i = 0; i < fruitArray.length; i++){
@@ -82,10 +69,29 @@ function updateFruitDom(){
   //  updateBankDom();
 }
 
+function updateGameVariables(type){
+    var gameType = type;
+    if (!gameType){
+        gameType = 'Standard';
+    }
+    $.ajax({
+        type: 'GET',
+        url: '/salesforce/gameSettings/'+gameType,
+        success: function (response) {
+            startingCash = response.starting_cash__c;
+            fruitArray = response.fruits__c.split(';');
+            gameRounds = response.game_length__c;
+            user = new User();
+            buildFruits(fruitArray);
+            buildDomFruits(fruitArray);
+        }
+    });
+}
 
 //////////////////////
 // constructors
 /////////////////////
+
 function Fruit(name, price){
     this.name = name;
     this.price = price;
@@ -110,23 +116,33 @@ function User(){
     this.totalCash = startingCash;
 }
 
-
 ///////////////////////////////
 // Game Logic
 ///////////////////////////////
 
-function startGame(){
-    var type = $(this).data("text");
-  //  console.log(type);
-    getGameId();
-    timer = setInterval(gameInterval, gameIntervalTime);
-    updateGameVariables(type);
+var init = function(){
+    console.log('jquery initalized');
+    enable();
+};
+
+
+function enable(){
+    $("#fruitContainer").on("click", ".fruit-button", buyFruit);
+    $("#fruitContainer").on("click", ".sell-button", sellFruit);
+    $('.start').on("click", startGame);
 }
 
 function disable(){
     clearInterval(timer);
     $(".sell-button").prop("disabled",true);
     $(".fruit-button").prop("disabled",true);
+}
+
+function startGame(){
+    var type = $(this).data("text");
+    getGameId();
+    timer = setInterval(gameInterval, gameIntervalTime);
+    updateGameVariables(type);
 }
 
 function gameInterval(){
@@ -141,28 +157,6 @@ function gameInterval(){
         updateFruitDom();
     }
 }
-
-function updateGameVariables(type){
-    var gameType = type;
-    if (!gameType){
-        gameType = 'Standard';
-    }
-      $.ajax({
-              type: 'GET',
-              url: '/salesforce/gameSettings/'+gameType,
-              success: function (response) {
-    //              console.log(response);
-                  startingCash = response.starting_cash__c;
-                  fruitArray = response.fruits__c.split(';');
-                  gameRounds = response.game_length__c;
-    //              console.log('fruit array in game settings',fruitArray);
-                  user = new User();
-                  buildFruits(fruitArray);
-                  buildDomFruits(fruitArray);
-              }
-    });
-}
-
 
 function getGameId(){
     $.ajax({
@@ -190,8 +184,6 @@ function sellFruit(){
     var fruit = $(this).parent().data("fruit");
     var price = $(this).parent().data("price");
     var button = $(this);
-  //  console.log('fruit and price inside sell', fruit, price);
-//    console.log( user["inv" + fruit] );
    if(user["inv" + fruit].length > 0) {
        var fruitId = user["inv" + fruit].splice(0, 1);
        user.totalCash += price;
@@ -202,8 +194,7 @@ function sellFruit(){
 }
 
 function postFruit(fruit, price, button){
-   var fruitObject = {name:fruit,price:price};
-   // console.log('fruit, price in post route client side', fruitObject);
+    var fruitObject = {name:fruit,price:price};
     $.ajax({
         type:'POST',
         url:"/salesforce/buyFruit",
@@ -223,7 +214,7 @@ function updateFruit(fruitId,price, button){
         url:"/salesforce/sellFruit",
         data:fruitObject,
         success:function(response){
-        console.log('sell fruit response',response);
+            console.log('sell fruit response',response);
             button.prop("disabled", false);
 
         }
