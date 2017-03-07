@@ -77,7 +77,11 @@ console.log('in variables get route',req.params);
     "name, " +
     "Fruits__c, " +
     "Game_Length__c, " +
-    "Starting_Cash__c  " +
+    "Starting_Cash__c," +
+    "Game_Interval__c," +
+    "MaxSwing__c," +
+    "MinSwing__c," +
+    "Starting_Price__c " +
     "FROM Game_Variable__c " +
     "WHERE name = '"+type+"'"},
         function (err, response) {

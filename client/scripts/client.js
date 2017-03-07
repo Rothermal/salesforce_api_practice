@@ -6,8 +6,8 @@ var fruitArray = ["Apples", "Oranges", "Bananas", "Pears"];
 var startingPrice = 5.00 ; //Whole numbers = dollars
 var minSwing = 1; // Whole numbers = cents
 var maxSwing = 50; // Whole numbers = cents
-var minPrice = 0.50;
-var maxPrice = 9.99;
+var minPrice =  startingPrice * 0.1;  //0.50;
+var maxPrice = (startingPrice * 2) - 0.01;  //9.99;
 var gameIntervalTime = 5000; //In milliseconds
 var gameRounds=60;
 var startingCash = 100;
@@ -78,9 +78,37 @@ function updateGameVariables(type){
         type: 'GET',
         url: '/salesforce/gameSettings/'+gameType,
         success: function (response) {
-            startingCash = response.starting_cash__c;
-            fruitArray = response.fruits__c.split(';');
-            gameRounds = response.game_length__c;
+            console.log(response);
+            if (response.starting_cash__c) {
+                startingCash = response.starting_cash__c;
+            }
+            if (response.fruits__c) {
+                fruitArray = response.fruits__c.split(';');
+            }
+            if(response.game_length__c) {
+                gameRounds = response.game_length__c;
+            }
+            if(response.game_interval__c){
+                gameIntervalTime = response.game_interval__c;
+            }
+            if(response.minSwing__c){
+                minSwing = response.MinSwing__c;
+            }
+            if(response.maxSwing__c){
+                maxSwing = response.maxSwing__c;
+
+            }
+            if(response.starting_Price__c){
+                startingPrice = response.Starting_Price__c;
+            }
+            console.log(startingCash);
+            console.log(fruitArray);
+            console.log(gameRounds);
+            console.log(gameIntervalTime);
+            console.log(minSwing);
+            console.log(maxSwing);
+            console.log(startingPrice);
+
             user = new User();
             buildFruits(fruitArray);
             buildDomFruits(fruitArray);
