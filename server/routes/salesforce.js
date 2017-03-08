@@ -68,6 +68,19 @@ router.put('/sellFruit',function(req,res){
     });
 
 });
+router.get('/gameType',function(req,res){
+    console.log('hit gametype route');
+    org.query({query:"SELECT name " +
+    "FROM Game_Variable__c"},
+        function (err, response){
+       if (err){
+           console.log(err);
+       }
+          console.log(response.records);
+          res.send(response.records);
+    });
+});
+
 
 router.get('/gameSettings/:type',function(req, res){
 console.log('in variables get route',req.params);

@@ -66,7 +66,6 @@ function updateFruitDom(){
 
         fruit.element.data("price", fruit.price);
     }
-  //  updateBankDom();
 }
 
 function updateGameVariables(type){
@@ -101,13 +100,13 @@ function updateGameVariables(type){
             if(response.starting_Price__c){
                 startingPrice = response.Starting_Price__c;
             }
-            console.log(startingCash);
-            console.log(fruitArray);
-            console.log(gameRounds);
-            console.log(gameIntervalTime);
-            console.log(minSwing);
-            console.log(maxSwing);
-            console.log(startingPrice);
+            //console.log(startingCash);
+            //console.log(fruitArray);
+            //console.log(gameRounds);
+            //console.log(gameIntervalTime);
+            //console.log(minSwing);
+            //console.log(maxSwing);
+            //console.log(startingPrice);
 
             user = new User();
             buildFruits(fruitArray);
@@ -151,6 +150,7 @@ function User(){
 var init = function(){
     console.log('jquery initalized');
     enable();
+    getGameType();
 };
 
 
@@ -254,6 +254,18 @@ function updateFruit(fruitId,price, button){
 /////////////////////
 function randomNumber(min, max){
     return Math.floor(Math.random() * (1 + max - min) + min);
+}
+/////////////////////////
+// get game types
+////////////////////////
+function getGameType(){
+    $.ajax({
+        type:"GET",
+        url:"/salesforce/gameType",
+        success:function(response){
+            console.log(response);
+        }
+    });
 }
 
 
