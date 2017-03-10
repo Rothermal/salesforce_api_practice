@@ -258,6 +258,7 @@ function randomNumber(min, max){
 /////////////////////////
 // get game types
 ////////////////////////
+// todo take response, sort response, build buttons in modal dynamically.
 function getGameType(){
     $.ajax({
         type:"GET",
