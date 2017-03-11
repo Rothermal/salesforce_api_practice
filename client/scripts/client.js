@@ -47,6 +47,15 @@ function buildDomFruits(fruitArray){
     }
     updateBankDom();
 }
+
+function buildGameTypes(typeArray){
+    $('#gameType').empty();
+    for(var i = 0; i<typeArray.length; i++){
+        $("#gameType").append('<button type="button" data-text="'+typeArray[i].name+'" ' +
+            'data-dismiss="modal" class="btn btn-primary start">'+typeArray[i].name+'</button>');
+
+    }
+}
 //////////////////////
 // update
 /////////////////////
@@ -157,7 +166,7 @@ var init = function(){
 function enable(){
     $("#fruitContainer").on("click", ".fruit-button", buyFruit);
     $("#fruitContainer").on("click", ".sell-button", sellFruit);
-    $('.start').on("click", startGame);
+    $('#gameType').on("click", ".start",startGame);
 }
 
 function disable(){
@@ -259,13 +268,13 @@ function randomNumber(min, max){
 // get game types
 ////////////////////////
 // todo take response, sort response, build buttons in modal dynamically.
-// todo quit doing denny 97 days
 function getGameType(){
     $.ajax({
         type:"GET",
         url:"/salesforce/gameType",
         success:function(response){
             console.log(response);
+            buildGameTypes(response);
         }
     });
 }
