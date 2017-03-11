@@ -259,6 +259,7 @@ function randomNumber(min, max){
 // get game types
 ////////////////////////
 // todo take response, sort response, build buttons in modal dynamically.
+// todo quit doing denny 97 days
 function getGameType(){
     $.ajax({
         type:"GET",
