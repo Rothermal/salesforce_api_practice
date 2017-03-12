@@ -41,6 +41,7 @@ function buildDomFruits(fruitArray){
         $el.data("price", fruitArray[i].price);
         $el.append("<p>" + fruitArray[i].name + "</p>");
         $el.append("<p class='fruit-price'>" + fruitArray[i].price.toFixed(2) + "</p>");
+        $el.append("<p class='fruit-inv'>" + user['inv'+ fruitArray[i].name ].length  + "</p>");
         $el.append("<button class='btn btn-warning fruit-button'>Buy</button>");
         $el.append("<button class='btn btn-warning sell-button'>Sell</button>");
         fruitArray[i].element = $el;
@@ -72,7 +73,6 @@ function updateFruitDom(){
         var fruit = fruitArray[i];
         fruit.price = parseFloat((Math.round(fruit.price * 100) / 100).toFixed(2));
         fruit.element.find(".fruit-price").text('$' + fruit.price.toFixed(2));
-
         fruit.element.data("price", fruit.price);
     }
 }
@@ -109,14 +109,6 @@ function updateGameVariables(type){
             if(response.starting_Price__c){
                 startingPrice = response.Starting_Price__c;
             }
-            //console.log(startingCash);
-            //console.log(fruitArray);
-            //console.log(gameRounds);
-            //console.log(gameIntervalTime);
-            //console.log(minSwing);
-            //console.log(maxSwing);
-            //console.log(startingPrice);
-
             user = new User();
             buildFruits(fruitArray);
             buildDomFruits(fruitArray);
@@ -124,6 +116,11 @@ function updateGameVariables(type){
     });
 }
 
+function updateInventory(){
+    for(var i = 0; i<fruitArray.length; i++){
+        fruitArray[i].element.find(".fruit-inv").text(user['inv'+fruitArray[i].name].length);
+    }
+}
 //////////////////////
 // constructors
 /////////////////////
@@ -173,6 +170,7 @@ function disable(){
     clearInterval(timer);
     $(".sell-button").prop("disabled",true);
     $(".fruit-button").prop("disabled",true);
+    gameOver();
 }
 
 function startGame(){
@@ -238,6 +236,7 @@ function postFruit(fruit, price, button){
         data: fruitObject,
         success: function(response){
             user["inv" + fruit].push(response);
+            updateInventory();
             button.prop("disabled", false);
         }
     });
@@ -252,10 +251,27 @@ function updateFruit(fruitId,price, button){
         data:fruitObject,
         success:function(response){
             console.log('sell fruit response',response);
-            button.prop("disabled", false);
-
+            if(button) {
+                button.prop("disabled", false);
+            }
+            updateInventory();
         }
     });
+}
+
+function gameOver(){
+    console.log('selling all fruit');
+    console.log(fruitArray);
+    var fruitId = '';
+    var price = 0;
+    for(var i = 0; i < fruitArray.length; i++){
+        for(var l = 0; l < user["inv" + fruitArray[i].name].length; l++){
+            fruitId = user['inv' + fruitArray[i].name][l];
+            price = fruitArray[i].price;
+        updateFruit(fruitId, price, null);
+        }
+    }
+    $("#fruitContainer").empty();
 }
 
 //////////////////////
@@ -267,7 +283,6 @@ function randomNumber(min, max){
 /////////////////////////
 // get game types
 ////////////////////////
-// todo take response, sort response, build buttons in modal dynamically.
 function getGameType(){
     $.ajax({
         type:"GET",
