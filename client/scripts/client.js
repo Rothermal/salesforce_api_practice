@@ -3,9 +3,9 @@
  */
 // game constants
 var fruitArray = ["Apples", "Oranges", "Bananas", "Pears"];
-var startingPrice = 15.00 ; //Whole numbers = dollars
-var minSwing = 1000; // Whole numbers = cents
-var maxSwing = 5000; // Whole numbers = cents
+var startingPrice = 5.00 ; //Whole numbers = dollars
+var minSwing = 1; // Whole numbers = cents
+var maxSwing = 50; // Whole numbers = cents
 var minPrice =  startingPrice * 0.1;  //0.50;
 var maxPrice = (startingPrice * 2) - 0.01;  //9.99;
 var gameIntervalTime = 5000; //In milliseconds
@@ -26,7 +26,7 @@ function buildFruits(fruitArray){
     for(var i = 0; i < fruitArray.length; i++){
         var newFruit = new Fruit(fruitArray[i], startingPrice);
         fruitArray[i] = newFruit;
-        newFruit.changePrice();
+        updatePrice(newFruit);
         user["inv" + newFruit.name] = [];
     }
 }
@@ -99,10 +99,10 @@ function updateGameVariables(type){
             if(response.game_interval__c){
                 gameIntervalTime = response.game_interval__c;
             }
-            if(response.minSwing__c){
+            if(response.minswing__c){
                 minSwing = response.minswing__c;
             }
-            if(response.maxSwing__c){
+            if(response.maxswing__c){
                 maxSwing = response.maxswing__c;
 
             }
@@ -128,6 +128,23 @@ function updateInventory(){
         fruitArray[i].element.find(".fruit-inv").text(user['inv'+fruitArray[i].name].length);
     }
 }
+
+function updatePrice(fruit){
+    var priceSwing = randomNumber(minSwing, maxSwing);
+    var randomAdjustment = randomNumber(1,2);
+    if(randomAdjustment == 1){
+        priceSwing = -priceSwing;
+    }
+    priceSwing = priceSwing/100;
+    fruit.price += priceSwing;
+    if(fruit.price > maxPrice){
+        fruit.price = maxPrice;
+    }
+    if(fruit.price < minPrice){
+        fruit.price = minPrice;
+    }
+}
+
 //////////////////////
 // constructors
 /////////////////////
@@ -135,21 +152,6 @@ function updateInventory(){
 function Fruit(name, price){
     this.name = name;
     this.price = price;
-    this.changePrice = function(){
-        var priceSwing = randomNumber(minSwing, maxSwing);
-        var randomAdjustment = randomNumber(1,2);
-        if(randomAdjustment == 1){
-            priceSwing = -priceSwing;
-        }
-        priceSwing = priceSwing/100;
-        this.price += priceSwing;
-        if(this.price > maxPrice){
-            this.price = maxPrice;
-        }
-        if(this.price < minPrice){
-            this.price = minPrice;
-        }
-    };
 }
 
 function User(){
@@ -193,7 +195,7 @@ function gameInterval(){
         console.log('Game Over');
     } else {
         for (var i = 0; i < fruitArray.length; i++) {
-            fruitArray[i].changePrice();
+            updatePrice(fruitArray[i]);
         }
         updateFruitDom();
     }
