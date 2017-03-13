@@ -3,9 +3,9 @@
  */
 // game constants
 var fruitArray = ["Apples", "Oranges", "Bananas", "Pears"];
-var startingPrice = 5.00 ; //Whole numbers = dollars
-var minSwing = 1; // Whole numbers = cents
-var maxSwing = 50; // Whole numbers = cents
+var startingPrice = 15.00 ; //Whole numbers = dollars
+var minSwing = 1000; // Whole numbers = cents
+var maxSwing = 5000; // Whole numbers = cents
 var minPrice =  startingPrice * 0.1;  //0.50;
 var maxPrice = (startingPrice * 2) - 0.01;  //9.99;
 var gameIntervalTime = 5000; //In milliseconds
@@ -13,7 +13,7 @@ var gameRounds=60;
 var startingCash = 100;
 var timer;
 var user;
-
+//todo fix minswing / maxswing not updating correctly.
 $(document).ready(function(){
     init();
 });
@@ -100,18 +100,25 @@ function updateGameVariables(type){
                 gameIntervalTime = response.game_interval__c;
             }
             if(response.minSwing__c){
-                minSwing = response.MinSwing__c;
+                minSwing = response.minswing__c;
             }
             if(response.maxSwing__c){
-                maxSwing = response.maxSwing__c;
+                maxSwing = response.maxswing__c;
 
             }
-            if(response.starting_Price__c){
-                startingPrice = response.Starting_Price__c;
+            if(response.starting_price__c){
+                startingPrice = response.starting_price__c;
             }
+            console.log(minSwing);
+            console.log(maxSwing);
+            console.log(startingPrice);
+            minPrice =  startingPrice * 0.1;
+            maxPrice = (startingPrice * 2) - 0.01;
+
             user = new User();
             buildFruits(fruitArray);
             buildDomFruits(fruitArray);
+            timer = setInterval(gameInterval, gameIntervalTime);
         }
     });
 }
@@ -176,7 +183,6 @@ function disable(){
 function startGame(){
     var type = $(this).data("text");
     getGameId();
-    timer = setInterval(gameInterval, gameIntervalTime);
     updateGameVariables(type);
 }
 
@@ -268,9 +274,11 @@ function gameOver(){
         for(var l = 0; l < user["inv" + fruitArray[i].name].length; l++){
             fruitId = user['inv' + fruitArray[i].name][l];
             price = fruitArray[i].price;
-        updateFruit(fruitId, price, null);
+            user.totalCash += price;
+            updateFruit(fruitId, price, null);
         }
     }
+    updateBankDom();
     $("#fruitContainer").empty();
 }
 
