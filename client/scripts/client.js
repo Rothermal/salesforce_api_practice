@@ -75,6 +75,7 @@ function updateFruitDom(){
         fruit.element.find(".fruit-price").text('$' + fruit.price.toFixed(2));
         fruit.element.data("price", fruit.price);
     }
+    postGameRound(fruitArray);
 }
 
 function updateGameVariables(type){
@@ -282,6 +283,10 @@ function gameOver(){
     }
     updateBankDom();
     $("#fruitContainer").empty();
+}
+
+function postGameRound(fruitArray){
+    console.log(fruitArray);
 }
 
 //////////////////////
