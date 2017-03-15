@@ -51,6 +51,10 @@ router.post('/buyFruit', function (req,res) {
     });
 });
 
+router.post('/gameRound',function(req,res){
+   console.log('hit the gameRounds post route', req.body);
+});
+
 router.put('/sellFruit',function(req,res){
     console.log('req in sellfruit route', req.body);
 
